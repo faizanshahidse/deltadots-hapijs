@@ -1,0 +1,23 @@
+{
+  "name": "deltadots-hapijs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "engines": {
+    "npm": "10.8.3",
+    "node": "v20.11.1"
+  },
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Faizan Shahid",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^21.3.12"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
