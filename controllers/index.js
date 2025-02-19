@@ -1,4 +1,4 @@
-export const getExample = (request, h) => {
+export const getExample = async (request, h) => {
   return h.response({ message: 'Hello from the controller!' }).code(200);
 };
 
