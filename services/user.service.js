@@ -2,41 +2,27 @@ import { UserDto, EmailAndIdDto } from '../dtos/user.dto.js';
 import User from '../repositories/user.repository.js';
 
 export const createNewUser = async (data = UserDto) => {
-  try {
-    return await User.create(data);
-  } catch (error) {
-    throw new Error(error);
-  }
+  return await User.create(data);
 };
 
 export const findUserByIdOrEmail = async (query = EmailAndIdDto) => {
-  try {
-    return await User.findOne(query);
-  } catch (error) {
-    throw new Error(error);
-  }
+  return await User.findOne(query);
 };
 
-export const findUsers = async () => {
-  try {
-    return await User.find();
-  } catch (error) {
-    throw new Error(error);
+export const findUsers = async (page) => {
+  let offset = 0;
+  let limit = 10;
+  if (page) {
+    offset = Number(page * 10);
   }
+
+  return await User.find(offset, limit);
 };
 
 export const updateUserById = async (userId, user = UserDto) => {
-  try {
-    return await User.updateById(userId, user);
-  } catch (error) {
-    throw new Error(error);
-  }
+  return await User.updateById(userId, user);
 };
 
 export const deleteUserById = async (userId) => {
-  try {
-    return await User.deleteById(userId);
-  } catch (error) {
-    throw new Error(error);
-  }
+  return await User.deleteById(userId);
 };

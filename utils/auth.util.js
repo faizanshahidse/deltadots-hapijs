@@ -18,6 +18,7 @@ export const createJwtAccessToken = (user) => {
     const payload = {
       id: user.id,
       email: user.email,
+      role: user.role,
     };
     const secret = JWT_ACCESS_SECRET_KEY;
     const options = {

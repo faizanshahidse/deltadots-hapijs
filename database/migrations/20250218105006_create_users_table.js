@@ -12,6 +12,7 @@ export const up = function (knex) {
         t.string('name', 100).notNullable();
         t.string('email', 100).unique().notNullable();
         t.string('password', 100).notNullable();
+        t.string('role', 20).notNullable().defaultTo('user');
         t.timestamps(true, true);
       });
     }

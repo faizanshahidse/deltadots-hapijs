@@ -20,8 +20,8 @@ class UserRepository {
     return user[0];
   }
 
-  static async find() {
-    return await User().select('*');
+  static async find(offset, limit) {
+    return await User().select('*').offset(offset).limit(limit);
   }
 
   static async updateById(userId, user = UserDto) {

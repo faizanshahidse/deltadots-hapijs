@@ -6,16 +6,11 @@ dotenv.config();
 
 import routes from './routes/index.js';
 
+import onPostAuthPlugin from './plugins/on-post-auth.plugin.js';
+import jwtStrategyPlugin from './plugins/jwt-strategy.plugin.js';
+
 const init = async () => {
-  const {
-    NODE_ENV,
-    PORT,
-    HOST,
-    JWT_ACCESS_SECRET_KEY,
-    JWT_ACCESS_TOKEN_EXPIRY,
-    ISSUER,
-    AUDIENCE,
-  } = process.env;
+  const { NODE_ENV, PORT, HOST } = process.env;
 
   const server = Hapi.server({
     port: PORT || 5000,
@@ -24,29 +19,8 @@ const init = async () => {
 
   // Register jwt with the server
   await server.register(Jwt);
-
-  server.auth.strategy('jwt', 'jwt', {
-    keys: JWT_ACCESS_SECRET_KEY,
-    verify: {
-      aud: AUDIENCE,
-      iss: ISSUER,
-      sub: false,
-      nbf: true,
-      exp: true,
-      maxAgeSec: 14400, // 4 hours
-      timeSkewSec: 15,
-    },
-    validate: (artifacts, request, h) => {
-      const { id, email } = artifacts.decoded.payload;
-      return {
-        isValid: true,
-        credentials: { user: { id, email } },
-      };
-    },
-  });
-
-  // Set the strategy
-  // server.auth.default('my_jwt_strategy');
+  await server.register(onPostAuthPlugin);
+  await server.register(jwtStrategyPlugin);
 
   server.route(routes);
 
@@ -56,13 +30,13 @@ const init = async () => {
     if (response.isBoom) {
       const { message, stack } = response;
 
-      const error = {
-        statusCode: response.statusCode || 5000,
+      const errorResponse = {
+        statusCode: response.output?.statusCode || 5000,
         message,
         stack: NODE_ENV === 'development' ? stack : '',
       };
 
-      return error;
+      return h.response(errorResponse).code(errorResponse.statusCode);
     }
     return h.continue;
   });
