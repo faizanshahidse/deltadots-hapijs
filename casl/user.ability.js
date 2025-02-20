@@ -19,11 +19,7 @@ const defineUserAbility = (user) => {
     if (user.role === 'user') {
       can('read', getAllUsers);
       can('read', getUserById);
-      // cannot('delete', deleteUser);
-      // cannot('update', updateUser);
     }
-    // can('manage', 'all');
-    // cannot('delete', 'User');
   });
 };
 

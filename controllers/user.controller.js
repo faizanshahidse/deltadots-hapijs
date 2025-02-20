@@ -61,7 +61,7 @@ export const updateUser = async (request, h) => {
     const userExists = await userService.findUserByIdOrEmail({ id: userId });
 
     if (!userExists) {
-      return h.response({ message: constant.user.NOT_EXIST }).code(500);
+      return h.response({ message: constant.user.NOT_EXIST }).code(404);
     }
 
     const user = {
@@ -74,7 +74,7 @@ export const updateUser = async (request, h) => {
 
     return h
       .response({ message: constant.user.UPDATED, data: updatedUser })
-      .code(200);
+      .code(201);
   } catch (err) {
     throw new Error(err);
   }
@@ -93,7 +93,7 @@ export const deleteUser = async (request, h) => {
     const userExists = await userService.findUserByIdOrEmail({ id: userId });
 
     if (!userExists) {
-      return h.response({ message: constant.user.NOT_EXIST }).code(500);
+      return h.response({ message: constant.user.NOT_EXIST }).code(404);
     }
 
     const deletedUser = await userService.deleteUserById(userId);

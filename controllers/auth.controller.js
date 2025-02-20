@@ -25,7 +25,7 @@ export const createNewUser = async (request, h) => {
     const userExists = await userService.findUserByIdOrEmail({ email });
 
     if (userExists) {
-      return h.response({ message: constant.user.EXIST }).code(500);
+      return h.response({ message: constant.user.EXIST }).code(409);
     }
 
     const data = {
@@ -60,7 +60,7 @@ export const login = async (request, h) => {
     const user = await userService.findUserByIdOrEmail({ email });
 
     if (!user) {
-      return h.response({ message: constant.user.NOT_EXIST }).code(500);
+      return h.response({ message: constant.user.NOT_EXIST }).code(404);
     }
 
     const isPasswordMatched = decryptPassword(password, user.password);
