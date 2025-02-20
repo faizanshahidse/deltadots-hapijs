@@ -1,16 +1,23 @@
 import {
   deleteUser,
+  fileUpload,
   getAllUsers,
   getUserById,
   updateUser,
 } from '../controllers/user.controller.js';
 
-const base = '/api';
+const base = '/api/users';
 
 const userRoutes = [
   {
     method: 'GET',
-    path: `${base}/user/{userId}`,
+    path: `${base}/file-upload`,
+    handler: fileUpload,
+  },
+
+  {
+    method: 'GET',
+    path: `${base}/{userId}`,
     options: {
       auth: {
         strategy: 'jwt',
@@ -21,7 +28,7 @@ const userRoutes = [
 
   {
     method: 'PUT',
-    path: `${base}/user/{userId}`,
+    path: `${base}/{userId}`,
     options: {
       auth: {
         strategy: 'jwt',
@@ -32,7 +39,7 @@ const userRoutes = [
 
   {
     method: 'DELETE',
-    path: `${base}/user/{userId}`,
+    path: `${base}/{userId}`,
     options: {
       auth: {
         strategy: 'jwt',
@@ -43,7 +50,7 @@ const userRoutes = [
 
   {
     method: 'GET',
-    path: `${base}/users`,
+    path: `${base}`,
     // options: { auth: 'jwt' },
     options: {
       auth: {

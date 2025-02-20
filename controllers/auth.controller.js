@@ -7,12 +7,14 @@ import {
   createJwtAccessToken,
 } from '../utils/auth.util.js';
 
+import constant from '../config/constants.js';
+
 export const createNewUser = async (request, h) => {
   try {
     const schema = Joi.object().keys({
-      name: Joi.string().required(),
+      name: Joi.string().min(3).required(),
       email: Joi.string().required().email(),
-      password: Joi.string().required(),
+      password: Joi.string().min(8).required(),
       role: Joi.string(),
     });
 
@@ -23,7 +25,7 @@ export const createNewUser = async (request, h) => {
     const userExists = await userService.findUserByIdOrEmail({ email });
 
     if (userExists) {
-      return h.response({ message: 'User already exists' }).code(500);
+      return h.response({ message: constant.user.EXIST }).code(500);
     }
 
     const data = {
@@ -37,7 +39,7 @@ export const createNewUser = async (request, h) => {
     delete user.password;
 
     return h
-      .response({ message: 'User registered successfully', data: user })
+      .response({ message: constant.user.REGISTERED, data: user })
       .code(201);
   } catch (err) {
     throw new Error(err);
@@ -58,22 +60,22 @@ export const login = async (request, h) => {
     const user = await userService.findUserByIdOrEmail({ email });
 
     if (!user) {
-      return h.response({ message: 'User does not exist' }).code(500);
+      return h.response({ message: constant.user.NOT_EXIST }).code(500);
     }
 
     const isPasswordMatched = decryptPassword(password, user.password);
 
     if (!isPasswordMatched) {
-      return h.response({ message: 'Email or password is wrong' }).code(403);
+      return h
+        .response({ message: constant.user.EMAIL_OR_PASSWORD_WRONG })
+        .code(403);
     }
 
     const token = await createJwtAccessToken(user);
     user.accessToken = token;
     delete user.password;
 
-    return h
-      .response({ message: 'User logged in successfulyy', data: user })
-      .code(200);
+    return h.response({ message: constant.user.LOGGED, data: user }).code(200);
   } catch (err) {
     throw new Error(err);
   }

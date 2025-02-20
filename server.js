@@ -17,12 +17,26 @@ const init = async () => {
     host: HOST,
   });
 
-  // Register jwt with the server
+  /***************************************************************************
+   *                                                                          *
+   * 1. jwtStrategyPlugin is used for json web token authentication.          *
+   *                                                                          *
+   * 2. onPostAuthPlugin plugin is used for casl authorization purpose        *
+   * after the jwt-token authentication.                                      *                             *
+   *                                                                          *
+   ***************************************************************************/
+
   await server.register(Jwt);
   await server.register(onPostAuthPlugin);
   await server.register(jwtStrategyPlugin);
 
   server.route(routes);
+
+  /***************************************************************************
+   *                                                                          *
+   * Global Error Handling                                                    *
+   *                                                                          *                                                          *
+   ***************************************************************************/
 
   server.ext('onPreResponse', function (request, h) {
     const response = request.response;

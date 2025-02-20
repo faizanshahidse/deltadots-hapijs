@@ -1,6 +1,9 @@
 import Joi from 'joi';
+import path from 'path';
 
 import * as userService from '../services/user.service.js';
+import constant from '../config/constants.js';
+import { uploadFile } from '../aws/upload-file.aws.js';
 
 export const getUserById = async (request, h) => {
   try {
@@ -14,9 +17,7 @@ export const getUserById = async (request, h) => {
 
     const user = await userService.findUserByIdOrEmail({ id: userId });
 
-    return h
-      .response({ message: 'User fetched successfully', data: user })
-      .code(200);
+    return h.response({ message: constant.user.FETCHED, data: user }).code(200);
   } catch (err) {
     throw new Error(err);
   }
@@ -30,7 +31,7 @@ export const getAllUsers = async (request, h) => {
     const users = await userService.findUsers(Number(page));
 
     return h
-      .response({ message: 'Users fetched successfully', data: users })
+      .response({ message: constant.user.FETCHED, data: users })
       .code(200);
   } catch (err) {
     throw new Error(err);
@@ -60,7 +61,7 @@ export const updateUser = async (request, h) => {
     const userExists = await userService.findUserByIdOrEmail({ id: userId });
 
     if (!userExists) {
-      return h.response({ message: 'User does not exist' }).code(500);
+      return h.response({ message: constant.user.NOT_EXIST }).code(500);
     }
 
     const user = {
@@ -72,7 +73,7 @@ export const updateUser = async (request, h) => {
     const updatedUser = await userService.updateUserById(userId, user);
 
     return h
-      .response({ message: 'Users updated successfully', data: updatedUser })
+      .response({ message: constant.user.UPDATED, data: updatedUser })
       .code(200);
   } catch (err) {
     throw new Error(err);
@@ -92,14 +93,33 @@ export const deleteUser = async (request, h) => {
     const userExists = await userService.findUserByIdOrEmail({ id: userId });
 
     if (!userExists) {
-      return h.response({ message: 'User does not exist' }).code(500);
+      return h.response({ message: constant.user.NOT_EXIST }).code(500);
     }
 
     const deletedUser = await userService.deleteUserById(userId);
 
     return h
-      .response({ message: 'Users deleted successfully', data: deletedUser })
+      .response({ message: constant.user.DELETED, data: deletedUser })
       .code(200);
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const fileUpload = async (request, h) => {
+  try {
+    // This is an example aws fileUpload having hard coded values.
+
+    const __dirname = path.dirname('programming_task');
+
+    const filePath = path.resolve(__dirname, 'public/programming_task.pdf');
+    const key = '/media';
+
+    const bucketName = process.env.S3_BUCKET;
+
+    const file = await uploadFile({ bucketName, key, filePath });
+
+    return h.response({ message: constant.user.FETCHED, data: file }).code(200);
   } catch (err) {
     throw new Error(err);
   }
