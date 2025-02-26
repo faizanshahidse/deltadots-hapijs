@@ -16,7 +16,17 @@
 
 > npm i
 
-### Database Configuration
+### Docker Compose Run
+
+> docker compose --env-file .env up
+
+> docker compose down
+
+> docker compose down --volumes
+
+> docker compose down --rmi <all|local>
+
+### Database Localhost Configuration
 
 [postgres]
 

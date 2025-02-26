@@ -16,7 +16,8 @@ class UserRepository {
    * @returns {import('knex').Knex.QueryBuilder<User, {}>}
    */
   static async findOne(query = EmailAndIdDto) {
-    const user = await User().select('*').where(query).limit(1);
+    const user = User().select('*').where(query).limit(1);
+    await user;
     return user[0];
   }
 
